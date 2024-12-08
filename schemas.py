@@ -36,6 +36,7 @@ class SUserRegister(BaseModel):
     about: Optional[str] = ''
     friends: str = ''
     time_created: str
+    permission_level: int = 0
 
 class SUser(SPostCreate):
     id: int

@@ -41,6 +41,7 @@ class UserOrm(Model):
     username: Mapped[Optional[str]]
     about: Mapped[Optional[str]]
     friends: Mapped[Optional[str]]
+    permission_level: Mapped[int]
     time_created: Mapped[str]
 
 
