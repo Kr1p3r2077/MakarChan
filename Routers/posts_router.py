@@ -22,4 +22,4 @@ async def post_get(
     thread_id
 ):
     posts = await PostRepository.find_all(thread_id)
-    return { "data": posts }
+    return { "posts": posts }

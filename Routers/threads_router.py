@@ -21,4 +21,4 @@ async def thread_create(
 @threads_router.get('/get')
 async def thread_get():
     threads = await ThreadRepository.find_all()
-    return { "data": threads }
+    return { "threads": threads }

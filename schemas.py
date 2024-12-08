@@ -27,4 +27,15 @@ class SPost(SPostCreate):
     id: int
 
 
-#TODO: Users
+#Users
+
+class SUserRegister(BaseModel):
+    login: str
+    password: str
+    username: Optional[str] = None
+    about: Optional[str] = ''
+    friends: str = ''
+    time_created: str
+
+class SUser(SPostCreate):
+    id: int

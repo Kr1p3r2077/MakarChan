@@ -32,6 +32,17 @@ class PostOrm(Model):
     creator_id: Mapped[int]
     posted_time: Mapped[str]
 
+class UserOrm(Model):
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    login: Mapped[str]
+    password: Mapped[str]
+    username: Mapped[Optional[str]]
+    about: Mapped[Optional[str]]
+    friends: Mapped[Optional[str]]
+    time_created: Mapped[str]
+
 
 async def create_tables():
     async with engine.begin() as conn:
