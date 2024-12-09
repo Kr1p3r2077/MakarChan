@@ -1,7 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import JSON, Column, Table, ForeignKey, Integer
 
 engine = create_async_engine(
     'sqlite+aiosqlite:///makarchan.db'
@@ -40,7 +41,6 @@ class UserOrm(Model):
     password: Mapped[str]
     username: Mapped[Optional[str]]
     about: Mapped[Optional[str]]
-    friends: Mapped[Optional[str]]
     permission_level: Mapped[int]
     time_created: Mapped[str]
 

@@ -10,7 +10,7 @@ threads_router = APIRouter(
     tags=['Треды']
 )
 
-@threads_router.post('/create')
+@threads_router.post('/create/{thread_id}')
 async def thread_create(
         thread: Annotated[SThreadCreate, Depends()]
 ):
@@ -18,7 +18,14 @@ async def thread_create(
     return { "ok": True, "thread_id": thread_id}
 
 
-@threads_router.get('/get')
-async def thread_get():
+@threads_router.get('/getall')
+async def get_all_threads():
     threads = await ThreadRepository.find_all()
     return { "threads": threads }
+
+@threads_router.post('/remove/{thread_id}')
+async def thread_remove(
+        thread_id: int
+):
+    result = await ThreadRepository.remove_one(thread_id)
+    return result

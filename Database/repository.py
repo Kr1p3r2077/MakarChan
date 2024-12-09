@@ -1,6 +1,8 @@
 from Database.database import new_session, ThreadOrm, PostOrm, UserOrm
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
+from Database.utils import check_user_is_valid
+from responses import UserRegisterResponse
 from schemas import SThreadCreate, SPostCreate, SUserRegister
 
 
@@ -24,6 +26,16 @@ class ThreadRepository:
             thread_models = result.scalars().all()
             return thread_models
 
+    @classmethod
+    async def remove_one(cls, thread_id: int):
+        async with new_session() as session:
+            query = delete(ThreadOrm).where(ThreadOrm.id == thread_id)
+
+            await session.execute(query)
+
+            await session.commit()
+            return {"result": True}
+
 
 class PostRepository:
     @classmethod
@@ -45,6 +57,16 @@ class PostRepository:
             post_models = result.scalars().all()
             return post_models
 
+    @classmethod
+    async def remove_one(cls, post_id: int):
+        async with new_session() as session:
+            query = delete(PostOrm).where(PostOrm.id == post_id)
+
+            await session.execute(query)
+
+            await session.commit()
+            return {"result": True}
+
 
 class UserRepository:
     @classmethod
@@ -54,28 +76,36 @@ class UserRepository:
 
             user = UserOrm(**user_dict)
 
+            if not await check_user_is_valid(user, session):
+                return {"result": False, "user_id":0}
+
             if user.username is None:
                 user.username = user.login
 
             session.add(user)
             await session.flush()
             await session.commit()
-            return user.id
+            return {"result": True, "user_id":user.id}
 
     @classmethod
     async def get_user(cls, user_id):
         async with new_session() as session:
-            #query = select(UserOrm).where(UserOrm.id == user_id)
-            #result = await session.execute(query)
-            #user_models = result.scalars().all()
             return await session.get(UserOrm, user_id)
 
     @classmethod
-    async def make_friends(cls, user_id1, user_id2):
+    async def get_all(cls):
         async with new_session() as session:
-            user1 = await session.get(UserOrm, user_id1)
-            user2 = await session.get(UserOrm, user_id2)
-            user1.friends = user1.friends + user_id2 + " "
-            user2.friends = user2.friends + user_id1 + " "
+            query = select(UserOrm)
+            result = await session.execute(query)
+            user_models = result.scalars().all()
+            return user_models
+
+    @classmethod
+    async def remove_one(cls, user_id: int):
+        async with new_session() as session:
+            query = delete(UserOrm).where(UserOrm.id == user_id)
+
+            await session.execute(query)
+
             await session.commit()
-            return 0
+            return {"result": True}

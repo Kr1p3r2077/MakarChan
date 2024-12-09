@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -34,7 +34,6 @@ class SUserRegister(BaseModel):
     password: str
     username: Optional[str] = None
     about: Optional[str] = ''
-    friends: str = ''
     time_created: str
     permission_level: int = 0
 
