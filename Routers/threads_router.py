@@ -12,7 +12,8 @@ threads_router = APIRouter(
 
 @threads_router.post('/create/{thread_id}')
 async def thread_create(
-        thread: Annotated[SThreadCreate, Depends()]
+        #thread: Annotated[SThreadCreate, Depends()]
+        thread: SThreadCreate
 ):
     thread_id = await ThreadRepository.create_one(thread)
     return { "ok": True, "thread_id": thread_id}

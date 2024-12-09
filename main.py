@@ -1,3 +1,6 @@
+from time import sleep
+
+import uvicorn
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from Database.database import create_tables, delete_tables
@@ -21,4 +24,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(threads_router)
 app.include_router(posts_router)
 app.include_router(users_router)
+
+#if __name__ == "__main__":
+#    uvicorn.run(app, host='0.0.0.0', port=8888)
 

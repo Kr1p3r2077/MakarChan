@@ -6,5 +6,4 @@ class DefaulResponse(BaseModel):
     desc: str
 
 class UserRegisterResponse(BaseModel):
-    result: bool
     user_id: int

@@ -73,19 +73,12 @@ class UserRepository:
     async def create_one(cls, data: SUserRegister):
         async with new_session() as session:
             user_dict = data.model_dump()
-
             user = UserOrm(**user_dict)
-
-            if not await check_user_is_valid(user, session):
-                return {"result": False, "user_id":0}
-
-            if user.username is None:
-                user.username = user.login
 
             session.add(user)
             await session.flush()
             await session.commit()
-            return {"result": True, "user_id":user.id}
+            return user.id
 
     @classmethod
     async def get_user(cls, user_id):

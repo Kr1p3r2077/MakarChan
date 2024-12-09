@@ -12,7 +12,8 @@ posts_router = APIRouter(
 
 @posts_router.post('/create')
 async def post_create(
-    post: Annotated[SPostCreate, Depends()]
+    #post: Annotated[SPostCreate, Depends()]
+    post: SPostCreate
 ):
     post_id = await PostRepository.create_one(post)
     return { "ok": True, "post_id": post_id}
