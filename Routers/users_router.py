@@ -2,38 +2,36 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from Database.repository import UserRepository
-from Manager.UserManager import RegisterUser
-from responses import DefaulResponse, UserRegisterResponse
-from schemas import SUserRegister
+from fastapi import APIRouter
+from Models.Users import SUserAdd
+from dependencies import users_service
+from Services.Users import UsersService
 
 users_router = APIRouter(
     prefix='/users',
     tags=['Пользователи']
 )
 
-@users_router.post('/register',response_model=UserRegisterResponse)
-async def user_register(
-    #user: Annotated[SUserRegister, Depends()]
-    user: SUserRegister
-):
-    return await RegisterUser(user)
 
-@users_router.get('/get/{user_id}')
-async def user_get(
-    user_id
+@users_router.post('/add')
+async def add_user(
+        user: SUserAdd,
+        users_service: Annotated[UsersService, Depends(users_service)]
 ):
-    user = await UserRepository.get_user(user_id)
-    return { "user": user }
+    user_id = await users_service.add_user(user)
+    return { 'user_id': user_id }
+
+@users_router.post('/delete')
+async def delete_user(
+        users_service: Annotated[UsersService, Depends(users_service)],
+        id: int
+):
+    result = await users_service.delete_user(id)
+    return { 'result': result }
 
 @users_router.get('/getall')
-async def get_all_users():
-    users = await UserRepository.get_all()
-    return { "users": users }
-
-@users_router.post('/remove/{user_id}')
-async def user_remove(
-        user_id
+async def get_all_users(
+        users_service: Annotated[UsersService, Depends(users_service)]
 ):
-    response = await UserRepository.remove_one(user_id)
-    return response
+    users = await users_service.get_users()
+    return { 'users': users }

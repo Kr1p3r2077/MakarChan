@@ -1,104 +1,40 @@
-from Database.database import new_session, ThreadOrm, PostOrm, UserOrm
-from sqlalchemy import select, delete
+from abc import ABC, abstractmethod
 
-from Database.utils import check_user_is_valid
-from responses import UserRegisterResponse
-from schemas import SThreadCreate, SPostCreate, SUserRegister
+from sqlalchemy import insert, select, delete
+
+from Database.database import new_session
 
 
-class ThreadRepository:
-    @classmethod
-    async def create_one(cls, data: SThreadCreate):
+class AbstractRepository(ABC):
+    @abstractmethod
+    async def add_one():
+        raise NotImplementedError
+
+    @abstractmethod
+    async def find_all():
+        raise NotImplementedError
+
+
+class SQLAlchemyRepository(AbstractRepository):
+    model = None
+
+    async def add_one(self, data: dict) -> int:
         async with new_session() as session:
-            thread_dict = data.model_dump()
-
-            thread = ThreadOrm(**thread_dict)
-            session.add(thread)
-            await session.flush()
+            req = insert(self.model).values(**data).returning(self.model.id)
+            res = await session.execute(req)
             await session.commit()
-            return thread.id
+            return res.scalar_one()
 
-    @classmethod
-    async def find_all(cls):
+    async def delete_one(self, id: int) -> bool:
         async with new_session() as session:
-            query = select(ThreadOrm)
-            result = await session.execute(query)
-            thread_models = result.scalars().all()
-            return thread_models
-
-    @classmethod
-    async def remove_one(cls, thread_id: int):
-        async with new_session() as session:
-            query = delete(ThreadOrm).where(ThreadOrm.id == thread_id)
-
-            await session.execute(query)
-
+            req = delete(self.model).where(self.model.id == id)
+            await session.execute(req)
             await session.commit()
-            return {"result": True}
+            return True
 
-
-class PostRepository:
-    @classmethod
-    async def create_one(cls, data: SPostCreate):
+    async def find_all(self):
         async with new_session() as session:
-            post_dict = data.model_dump()
-
-            post = PostOrm(**post_dict)
-            session.add(post)
-            await session.flush()
-            await session.commit()
-            return post.id
-
-    @classmethod
-    async def find_all(cls, thread_id):
-        async with new_session() as session:
-            query = select(PostOrm).where(PostOrm.board_id == thread_id)
-            result = await session.execute(query)
-            post_models = result.scalars().all()
-            return post_models
-
-    @classmethod
-    async def remove_one(cls, post_id: int):
-        async with new_session() as session:
-            query = delete(PostOrm).where(PostOrm.id == post_id)
-
-            await session.execute(query)
-
-            await session.commit()
-            return {"result": True}
-
-
-class UserRepository:
-    @classmethod
-    async def create_one(cls, data: SUserRegister):
-        async with new_session() as session:
-            user_dict = data.model_dump()
-            user = UserOrm(**user_dict)
-
-            session.add(user)
-            await session.flush()
-            await session.commit()
-            return user.id
-
-    @classmethod
-    async def get_user(cls, user_id):
-        async with new_session() as session:
-            return await session.get(UserOrm, user_id)
-
-    @classmethod
-    async def get_all(cls):
-        async with new_session() as session:
-            query = select(UserOrm)
-            result = await session.execute(query)
-            user_models = result.scalars().all()
-            return user_models
-
-    @classmethod
-    async def remove_one(cls, user_id: int):
-        async with new_session() as session:
-            query = delete(UserOrm).where(UserOrm.id == user_id)
-
-            await session.execute(query)
-
-            await session.commit()
-            return {"result": True}
+            req = select(self.model)
+            res = await session.execute(req)
+            res = [row[0].to_read_model() for row in res.all()]
+            return res

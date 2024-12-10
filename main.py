@@ -1,14 +1,12 @@
-from time import sleep
-
-import uvicorn
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from Database.database import create_tables, delete_tables
-from fastapi.middleware.cors import CORSMiddleware
 
-from Routers.threads_router import threads_router
-from Routers.posts_router import posts_router
+from fastapi import FastAPI
+
+from Database.database import create_tables, delete_tables
+#from Routers.posts_router import posts_router
+#from Routers.threads_router import threads_router
 from Routers.users_router import users_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,10 +19,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(threads_router)
-app.include_router(posts_router)
+#app.include_router(threads_router)
+#app.include_router(posts_router)
 app.include_router(users_router)
 
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 #    uvicorn.run(app, host='0.0.0.0', port=8888)
-
