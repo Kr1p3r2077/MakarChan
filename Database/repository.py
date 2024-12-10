@@ -38,3 +38,10 @@ class SQLAlchemyRepository(AbstractRepository):
             res = await session.execute(req)
             res = [row[0].to_read_model() for row in res.all()]
             return res
+
+    async def find_one(self, id: int):
+        async with new_session() as session:
+            req = select(self.model).where(self.model.id == id)
+            res = await session.execute(req)
+            res = [row[0].to_read_model() for row in res.all()]
+            return res[0]
