@@ -41,7 +41,6 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def find_one(self, id: int):
         async with new_session() as session:
-            req = select(self.model).where(self.model.id == id)
-            res = await session.execute(req)
-            res = [row[0].to_read_model() for row in res.all()]
-            return res[0]
+            #req = await select(self.model).get(id)
+            res = await session.get(self.model, id)
+            return res
