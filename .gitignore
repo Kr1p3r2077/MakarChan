@@ -1,3 +1,6 @@
 venv
 makarchan.db
 .idea
+webServer.bat
+run.bat
+API.bat
