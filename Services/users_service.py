@@ -8,6 +8,9 @@ class UsersService:
 
     async def add_user(self, user: SUserAdd):
         user_dict = user.model_dump()
+        if await self.users_repo.find_by_conditions({"login": user.login}) != []:
+            return 0
+
         user_id = await self.users_repo.add_one(user_dict)
         return user_id
 

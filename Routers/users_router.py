@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from fastapi import APIRouter
 from Models.Users import SUserAdd
 from dependencies import users_service
-from Services.Users import UsersService
+from Services.users_service import UsersService
 
 users_router = APIRouter(
     prefix='/users',

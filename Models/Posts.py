@@ -5,7 +5,7 @@ from Database.database import Model
 
 class SPostAdd(BaseModel):
     text: str
-    board_id: int = 1
+    thread_id: int = 1
     creator_id: int = 1
     posted_time: str = '12:44:55 10.12.2024'
 
@@ -19,7 +19,7 @@ class PostOrm(Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str]
-    board_id: Mapped[int]
+    thread_id: Mapped[int]
     creator_id: Mapped[int]
     posted_time: Mapped[str]
 
@@ -27,7 +27,7 @@ class PostOrm(Model):
         return SPost(
             id=self.id,
             text=self.text,
-            board=self.board,
+            thread_id=self.thread_id,
             creator_id=self.creator_id,
             posted_time=self.posted_time
         )
