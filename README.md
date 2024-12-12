@@ -4,4 +4,6 @@ Project: "MakarChan" is a simple forum that is being developed in **Python** & *
 
 **This repository** is the basic microservice of the project.
 
+**MakarChan-Authorization** is the authorization microservice.
+
 **TODO:** Сaching, processing messages using RabbitMQ, Authentication and Authorization.
