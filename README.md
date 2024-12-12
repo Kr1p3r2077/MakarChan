@@ -1,4 +1,4 @@
-# Makarchan Server API
+# Makarchan Server
 
 Pet project: "MakarChan" is a simple forum that is being developed in **Python** & **FastAPI**.
 
