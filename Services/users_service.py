@@ -25,3 +25,9 @@ class UsersService:
     async def get_user(self, id: int):
         user = await self.users_repo.find_one(id)
         return user
+
+    async def get_user_by_login(self, login: str):
+        res = await self.users_repo.find_by_conditions({"login": login})
+        if res != []:
+            return res[0]
+        return None
