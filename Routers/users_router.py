@@ -12,7 +12,6 @@ users_router = APIRouter(
     tags=['Пользователи']
 )
 
-
 @users_router.post('/add')
 async def add_user(
         user: SUserAdd,
