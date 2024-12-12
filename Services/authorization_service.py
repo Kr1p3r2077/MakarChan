@@ -12,12 +12,7 @@ class AuthService:
         correct_data = await users_service().get_user_by_login(login_data.login)
         if correct_data != None:
             if correct_data.password == login_data.password:
-                #return {"result": "OK"}
-                #print("OK 1")
                 token = security.create_access_token(str(correct_data.id))
-                #print("OK 2")
-                resp.set_cookie(config.JWT_ACCESS_COOKIE_NAME, token)
-                #print("OK 3")
                 return {"access_token": token}
             raise HTTPException(status_code=401, detail="Incorrect Username or Login")
 

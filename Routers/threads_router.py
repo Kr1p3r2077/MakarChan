@@ -1,11 +1,12 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from fastapi import APIRouter
 
 from Models.Threads import SThreadAdd
 from Services.threads_service import ThreadsService
+from authorization import security
 from dependencies import threads_service
 
 threads_router = APIRouter(
@@ -44,3 +45,12 @@ async def get_thread(
 ):
     thread = await threads_service.get_thread(thread_id)
     return { 'thread': thread }
+
+@threads_router.post('/create_thread')
+async def create_thread(
+    request: Request,
+    thread_data: SThreadAdd,
+    threads_service: Annotated[ThreadsService, Depends(threads_service)]
+):
+    await threads_service.create_thread(thread_data, request)
+    return {'result': "OK"}

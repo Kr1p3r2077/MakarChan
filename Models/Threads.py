@@ -15,7 +15,6 @@ class SThreadAdd(BaseModel):
 class SThread(SThreadAdd):
     id: int
 
-
 class ThreadOrm(Model):
     __tablename__ = 'threads'
 
